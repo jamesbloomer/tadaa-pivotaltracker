@@ -1,1 +1,26 @@
-TODO
+{
+	"pivotal tracker open bugs" : {
+		"name" : "tadaa-pivotaltracker", 
+		"options" : {
+			"template" : "OpenBugs",
+			"projectId" : "MY_PROJECT_ID",
+			"apitoken" : "MY_API_TOKEN"
+		}
+	},
+	"pivotal tracker open features" : {
+		"name" : "tadaa-pivotaltracker", 
+		"options" : {
+			"template" : "OpenFeatures",
+			"projectId" : "MY_PROJECT_ID",
+			"apitoken" : "MY_API_TOKEN"
+		}
+	},
+	"pivotal tracker custom filter" : {
+		"name" : "tadaa-pivotaltracker",
+		"options" : {
+			"filter" : "type:bug state:unscheduled,unstarted",
+			"projectId" : "MY_PROJECT_ID",
+			"apitoken" : "MY_API_TOKEN"
+		}
+	}
+}

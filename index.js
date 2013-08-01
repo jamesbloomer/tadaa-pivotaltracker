@@ -20,12 +20,6 @@ pt._getStories = function(filter, options, callback) {
     });
 };
 
-// TODO remove, redundant
-pt._getOpenBugs = function(options, callback) {
-    var openBugsFilter = "type:bug state:unscheduled,unstarted,started,finished,delivered,rejected";
-	return pt._getStories(openBugsFilter, options, callback);
-};
-
 pt.getValue = function(options, callback) {
     if(options && options.template) {
         return pt._getStories(templates[options.template], options, callback);

@@ -5,15 +5,37 @@ var mocha = require('mocha'),
 	index = require('../index.js');
 
 describe('Tadaa Pivotal Tracker Tests', function() {
-	describe('when getValue called', function() {
+	describe('when getValue called (pivotal methods check)', function() {
 		beforeEach(function() {
-			// sinon.stub(index, '_getOpenBugs');
-			sinon.stub(index, '_getStories');
+			sinon.stub(pivotal, 'useToken');
+			sinon.stub(pivotal, 'getStories').yields(null, { story : { length : 1 } });
 		});
 
 		afterEach(function() {
-			// index._getOpenBugs.restore();
+			pivotal.useToken.restore();
+			pivotal.getStories.restore();
+		});
+
+		it('should call pivotal methods', function(done) {
+			index._getStories('FILTER', { token: "myToken", projectId: "projectId" }, function(err) {
+				assert(pivotal.useToken.calledWith('myToken'));
+				assert(pivotal.getStories.calledWith('projectId', { filter: "FILTER" }));
+				done();
+			});
+		});
+	});
+
+	describe('when getValue called', function() {
+		beforeEach(function() {
+			sinon.stub(index, '_getStories');
+			sinon.stub(pivotal, 'useToken');
+			sinon.stub(pivotal, 'getStories').yields(null, { story : { length : 1 } });
+		});
+
+		afterEach(function() {
 			index._getStories.restore();
+			pivotal.useToken.restore();
+			pivotal.getStories.restore();
 		});
 
 		it('should default to getting open bugs if not filter passed in options', function(done) {
@@ -57,35 +79,6 @@ describe('Tadaa Pivotal Tracker Tests', function() {
 				assert.equal(index._getStories.args[0][0], 'type:feature state:unscheduled,unstarted,started,finished,delivered,rejected');
 				assert.deepEqual(index._getStories.args[0][1], options);
 				return done();
-			});
-		});
-	});
-
-	// TODO move to getStories
-	describe('when _getOpenBugs called', function() {
-		beforeEach(function() {
-			sinon.stub(pivotal, 'useToken');
-			sinon.stub(pivotal, 'getStories').yields(null, { story : { length : 1 } });
-		});
-
-		afterEach(function() {
-			pivotal.useToken.restore();
-			pivotal.getStories.restore();
-		});
-
-		it('should not error', function(done) {
-			index._getOpenBugs({ token: "myToken", projectId: "projectId" }, function(err) {
-				assert.equal(err, null);
-				done();
-			});
-		});
-
-		it('should call pivotal methods', function(done) {
-			index._getOpenBugs({ token: "myToken", projectId: "projectId" }, function(err) {
-				// TODO change when token changes
-				assert(pivotal.useToken.calledWith('myToken'));
-				assert(pivotal.getStories.calledWith('projectId', { filter: "type:bug state:unscheduled,unstarted,started,finished,delivered,rejected" }));
-				done();
 			});
 		});
 	});
